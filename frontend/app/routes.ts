@@ -14,4 +14,8 @@ export default [
     path: "posts",
     file: "routes/posts.tsx", 
   },
+  {
+    path: "create_post",
+    file: "routes/create_post.tsx", 
+  },
 ] satisfies RouteConfig;

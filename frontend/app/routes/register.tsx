@@ -16,7 +16,7 @@ export default function Register() {
     setError(""); 
     try {
       const data = await register(username, email, password);
-      console.log("Registered successfully", data);
+     
       navigate("/"); 
     } catch (err: any) {
       if (err.message === "server_error") {

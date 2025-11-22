@@ -14,7 +14,7 @@ export async function login(email: string, password: string): Promise<AuthRespon
     });
 
     const data = await res.json();
-
+  
     if (!res.ok) {
 
       if (res.status === 401) {

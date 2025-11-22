@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './entities/user.entity';
@@ -10,20 +10,30 @@ export class UsersService {
     private usersRepository: Repository<User>,
   ) {}
 
- 
-  create(user: Partial<User>) {
+  async create(user: Partial<User>) {
     const newUser = this.usersRepository.create(user);
-    return this.usersRepository.save(newUser);
+
+    try {
+      return await this.usersRepository.save(newUser);
+    } catch (err: any) {
+   
+      if (err.code === 'SQLITE_CONSTRAINT') {
+        if (err.message.includes('username')) {
+          throw new BadRequestException('Username is taken');
+        }
+        if (err.message.includes('email')) {
+          throw new BadRequestException('Email is taken');
+        }
+      }
+      throw err;
+    }
   }
 
-
-  findOne(id: number) {
+  async findOne(id: number) {
     return this.usersRepository.findOne({ where: { id } });
   }
 
-
-  findByEmail(email: string) {
+  async findByEmail(email: string) {
     return this.usersRepository.findOne({ where: { email } });
   }
 }
-
